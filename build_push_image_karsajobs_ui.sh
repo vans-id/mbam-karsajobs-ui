@@ -5,4 +5,4 @@ docker build -t ghcr.io/vans-id/karsajobs-ui:latest .
 echo $GITHUB_TOKEN | docker login ghcr.io -u vans-id --password-stdin
 
 # Push Image ke Github Packages
-docker push ghcr.io/vans-id/item-app:v1
+docker push ghcr.io/vans-id/karsajobs-ui:latest
