@@ -1,0 +1,35 @@
+# Menentukan versi API yang digunakan untuk membuat Deployment
+apiVersion: apps/v1
+# Menentukan tipe objek yang akan dibuat, yaitu Deployment
+kind: Deployment
+# Identifikasi Deployment berdasar nama dan label
+metadata:
+  name: frontend
+  labels:
+    app: frontend
+# spesifikasi Deployment
+spec:
+  # Jumlah replika yang dibuat
+  replicas: 1
+  # menentukan pod yang akan dibuat oleh Deployment
+  selector:
+    matchLabels:
+      app: frontend
+  # spesifikasi template yang akan digunakan untuk membuat pod
+  template:
+    # Metadata untuk pod yang dibuat oleh Deployment
+    metadata:
+      labels:
+        app: frontend
+    # Spesifikasi container yang akan dijalankan di dalam pod
+    spec:
+      containers:
+        # nama container
+        - name: frontend
+          # Image yang akan digunakan untuk membuat container
+          image: ghcr.io/vans-id/karsajobs-ui:latest
+          # Policy yang akan digunakan untuk mengambil image
+          imagePullPolicy: Always
+          # Port yang akan digunakan oleh container
+          ports:
+            - containerPort: 8000

@@ -1,0 +1,68 @@
+# API Version untuk StatefulSet
+apiVersion: apps/v1
+# Resource yang dihasilkan adalah Statefulset
+kind: StatefulSet
+# Informasi identifikasi Resource berdasar nama dan label
+metadata:
+  name: mongodb
+  labels:
+    app: mongodb
+# spesifikasi Statefulset
+spec:
+  # selector untuk menentukan pod yang akan dibuat oleh StatefulSet
+  selector:
+    matchLabels:
+      app: mongodb
+      tier: backend
+  # nama service yang digunakan Statefulset
+  serviceName: mongodb
+  # jumlah replika yang akan dibuat
+  replicas: 1
+  # batas waktu untuk container siap digunakan tanpa crash
+  minReadySeconds: 10
+  # spesifikasi template yang akan digunakan untuk membuat pod
+  template:
+    # Informasi identifikasi Resource berdasar label
+    metadata:
+      labels:
+        app: mongodb
+        tier: backend
+    # spesifikasi pod
+    spec:
+      # batas waktu aplikasi untuk mematikan dirinya
+      terminationGracePeriodSeconds: 10
+      # spesifikasi container
+      containers:
+        # image yang digunakan
+        - image: mongo:4.4.3
+          # nama container
+          name: mongodb
+          # environment variable milik contianer
+          env:
+            - name: MONGO_INITDB_ROOT_USERNAME_FILE
+              value: /etc/mongo-credentials/MONGO_ROOT_USERNAME
+            - name: MONGO_INITDB_ROOT_PASSWORD_FILE
+              value: /etc/mongo-credentials/MONGO_ROOT_PASSWORD
+          # port yang dibuka oleh container
+          ports:
+            - containerPort: 27017
+              name: mongodb
+          # mount volume yang dideklarasikan agar bisa diakses
+          volumeMounts:
+            - name: mongo-persistent-storage
+              mountPath: /data/db
+            - name: mongo-config
+              mountPath: /config
+            - name: mongo-secret
+              mountPath: /etc/mongo-credentials
+      # Deklarasikan volume yang ada pada Pod
+      volumes:
+        - name: mongo-persistent-storage
+          persistentVolumeClaim:
+            claimName: mongodb-pv-claim
+        - name: mongo-config
+          configMap:
+            name: mongodb-configmap
+        - name: mongo-secret
+          secret:
+            secretName: mongodb-secret

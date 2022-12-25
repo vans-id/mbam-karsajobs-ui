@@ -1,0 +1,43 @@
+# API Version untuk PV
+apiVersion: v1
+# Resource yang dihasilkan adalah PV
+kind: PersistentVolume
+# Identifikasi Resource berdasar nama dan label
+metadata:
+  name: mongodb-pv
+  labels:
+    type: local
+# Spesifikasi PV
+spec:
+  # Membuat storage secara manual
+  storageClassName: manual
+  # Kapasistas Storage sebanyak 1 GB
+  capacity:
+    storage: 1Gi
+  # Hanya 1 Pod yang diizinkan untuk menulis/membaca dari volume ini
+  accessModes:
+    - ReadWriteOnce
+  # Path penyimpanan pada MongoDB
+  hostPath:
+    path: '/data/db'
+---
+# API Version untuk PVC
+apiVersion: v1
+# Resource yang dihasilkan adalah PVC
+kind: PersistentVolumeClaim
+# Identifikasi Resource berdasar nama dan label
+metadata:
+  name: mongodb-pv-claim
+  labels:
+    app: mongodb
+# Spesifikasi PVC
+spec:
+  # Membuat storage secara manual
+  storageClassName: manual
+  # Hanya 1 Pod yang diizinkan untuk menulis/membaca dari volume ini
+  accessModes:
+    - ReadWriteOnce
+  # Spesifikasi storage yang diinginkan
+  resources:
+    requests:
+      storage: 1Gi

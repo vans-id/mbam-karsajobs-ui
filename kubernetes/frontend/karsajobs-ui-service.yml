@@ -1,0 +1,17 @@
+# Menentukan versi API yang digunakan untuk membuat Service
+apiVersion: v1
+# Menentukan tipe objek yang akan dibuat, yaitu Service
+kind: Service
+# Identifikasi Service berdasar nama dan label
+metadata:
+  name: frontend
+  labels:
+    app: frontend
+# Spesifikasi Service
+spec:
+  # port yang akan digunakan oleh Service
+  ports:
+    - port: 8000
+  # Memilih pod/deployment yang akan dilayani oleh Service
+  selector:
+    app: frontend

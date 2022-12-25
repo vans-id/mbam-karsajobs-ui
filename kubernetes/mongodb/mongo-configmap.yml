@@ -1,0 +1,12 @@
+# API Version untuk ConfigMap
+apiVersion: v1
+# Resource yang dihasilkan adalah ConfigMap
+kind: ConfigMap
+# Identifikasi Resource berdasar nama
+metadata:
+  name: mongodb-configmap
+# Konfigurasi ConfigMap yang disimpan dalam mongo.conf
+data:
+  mongo.conf: |
+    storage:
+      dbPath: /data/db

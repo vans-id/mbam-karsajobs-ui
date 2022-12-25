@@ -1,0 +1,20 @@
+# Versi API yang digunakan untuk membuat Service
+apiVersion: v1
+# Tipe objek yang akan dibuat, yaitu Service
+kind: Service
+# Identifikasi Service, berdasar nama dan label
+metadata:
+  name: mongodb
+  labels:
+    app: mongodb
+# Spesifikasi service
+spec:
+  # Port yang digunakan service
+  ports:
+    - port: 27017
+  # Selector untuk enentukan pod/deployment yang akan dilayani Service
+  selector:
+    app: mongodb
+    tier: backend
+  # Headless Service
+  clusterIP: None

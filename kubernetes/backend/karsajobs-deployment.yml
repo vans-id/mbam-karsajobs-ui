@@ -1,0 +1,53 @@
+# Menentukan versi API yang digunakan untuk membuat Deployment
+apiVersion: apps/v1
+# Menentukan tipe objek yang akan dibuat, yaitu Deployment
+kind: Deployment
+# Identifikasi Deployment berdasar nama dan label
+metadata:
+  name: backend
+  labels:
+    app: backend
+# spesifikasi Deployment
+spec:
+  # Jumlah replika yang dibuat
+  replicas: 1
+  # menentukan pod yang akan dibuat oleh Deployment
+  selector:
+    matchLabels:
+      app: backend
+  # spesifikasi template yang akan digunakan untuk membuat pod
+  template:
+    # Metadata untuk pod yang dibuat oleh Deployment
+    metadata:
+      labels:
+        app: backend
+    # Spesifikasi container yang akan dijalankan di dalam pod
+    spec:
+      containers:
+        # nama container
+        - name: backend
+          # Image yang akan digunakan untuk membuat container
+          image: ghcr.io/vans-id/karsajobs:latest
+          # Port yang akan digunakan oleh container
+          ports:
+            - containerPort: 8080
+          # Environment variable milik container
+          env:
+            # Port yang digunakan oleh aplikasi di dalam container
+            - name: APP_PORT
+              value: '8080'
+            # Nama host untuk terhubung ke MongoDB
+            - name: MONGO_HOST
+              value: mongodb
+            # variabel MONGO_USER yang nilainya didapat dari secret
+            - name: MONGO_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-secret
+                  key: MONGO_ROOT_USERNAME
+            # variabel MONGO_PASS yang nilainya didapat dari secret
+            - name: MONGO_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-secret
+                  key: MONGO_ROOT_PASSWORD
